@@ -1,4 +1,9 @@
 "use client";
+import * as React from "react";
+import Button from "@mui/material/Button";
+import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   CopyAllOutlined,
   CurrencyExchange,
@@ -28,12 +33,14 @@ export default function PaymentSection() {
   const [error, setError] = useState<string | null>("");
   const [success, setSuccess] = useState<boolean | null>(false);
   const [inviteLink, setInviteLink] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const chatIdParam = searchParams.get("chatId"); // Get chatId from the query parameters
     if (chatIdParam) {
       setChatId(parseInt(chatIdParam)); // Parse to number
       setIsInputLocked(true); // Lock input immediately if chatId is available
+      setOpen(true);
     }
   }, [searchParams]);
 
@@ -234,8 +241,37 @@ export default function PaymentSection() {
     }
   };
 
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={() => setOpen(false)}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+
+  const vertical = "top";
+  const horizontal = "center";
+
   return (
     <div id="payment">
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        // autoHideDuration={6000}
+        onClose={() => setOpen(false)}
+      >
+        <Alert
+          onClose={() => setOpen(false)}
+          severity="success" // Can be "error", "warning", "info", "success"
+        >
+          TradeTutor ID has been set, Scroll down to make payment.
+        </Alert>
+      </Snackbar>
       <div className="px-4 py-10 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-lg md:px-24 lg:px-8 lg:py-10">
         <div className="flex flex-col justify-between lg:flex-row gap-5 lg:gap-0">
           <ElementOne />

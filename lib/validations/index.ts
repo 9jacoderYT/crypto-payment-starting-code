@@ -61,6 +61,11 @@ export function isValidEthOrBscTransactionHash(txHash: string): boolean {
   return hexRegex.test(txHash);
 }
 
+export function isValidTronTransactionHash(txHash: string): boolean {
+  const hexRegex = /^[a-fA-F0-9]{64}$/;
+  return hexRegex.test(txHash);
+}
+
 // Converts BNB value to a human-readable decimal format
 export function convertBnbToDecimals(value: number): number {
   const decimals = 18;

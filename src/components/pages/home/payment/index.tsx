@@ -13,7 +13,10 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ElementOne from "./elements/element-1";
 import { Alert, CircularProgress } from "@mui/material";
-import { isValidEthOrBscTransactionHash } from "../../../../../lib/validations";
+import {
+  isValidEthOrBscTransactionHash,
+  isValidTronTransactionHash,
+} from "../../../../../lib/validations";
 import {
   checkTransactionHash,
   uploadNewUser,
@@ -99,8 +102,7 @@ export default function PaymentSection() {
     }
 
     // we have to validate the transaction hash
-    let validateTransactionHash =
-      isValidEthOrBscTransactionHash(transactionHash);
+    let validateTransactionHash = isValidTronTransactionHash(transactionHash);
 
     if (!validateTransactionHash) {
       setError("Transaction Hash Invalid");
@@ -111,18 +113,14 @@ export default function PaymentSection() {
 
     try {
       //check if the transaction hash has been used previously
-      let res = await checkTransactionHash(transactionHash);
-      if (res) {
-        setError("Transaction Hash already Used.");
-        return;
-      }
+      // Uncommet this :
+      // let res = await checkTransactionHash(transactionHash);
+      // if (res) {
+      //   setError("Transaction Hash already Used.");
+      //   return;
+      // }
 
-      let url = "/api/validateTransaction";
-      if (currency == "usdt") {
-        url = "/api/validate";
-      }
-
-      const response = await fetch(url, {
+      const response = await fetch("/api/validate-tron", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -214,8 +212,8 @@ export default function PaymentSection() {
     }
 
     if (currencyValue == "usdt") {
-      setWallet("0x0527bB5863E2904ABB8AfD4D76E90d3C18f55a27");
-      setAmount(2.5);
+      setWallet("TU4vEruvZwLLkSfV9bNw12EJTPvNr7Pvaa");
+      setAmount(100);
     }
     if (currencyValue == "bnb") {
       setWallet("0x0827BC11F147ABdB20aDF6b5Ff8204A7eEFA165F");
@@ -304,7 +302,7 @@ export default function PaymentSection() {
                 - Mode Of Payment -
               </option>
               <option value="usdt">UsDT</option>
-              <option value="bnb">BNB</option>
+              {/* <option value="bnb">BNB</option> */}
               {/* <option value="eth">Ether</option> */}
             </select>
 
@@ -328,7 +326,7 @@ export default function PaymentSection() {
                   </p>
                   <p className="text-sm text-red-400 py-2 leading-5">
                     *Make sure to select the{" "}
-                    <big className="font-bold">BSC(BEP20)</big> Network, if you
+                    <big className="font-bold">TRON(TRC20)</big> Network, if you
                     are transferring from Bybit, Binance or any Crypto Exchange*
                   </p>
                 </div>

@@ -93,7 +93,8 @@ export async function POST(request: Request) {
       return NextResponse.json({
         status: 400,
         error: true,
-        message: "Amount sent is below the minimum required",
+        message:
+          "Amount sent is below the minimum required. Please Contact Support",
       });
     }
 

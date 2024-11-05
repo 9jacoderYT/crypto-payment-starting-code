@@ -78,7 +78,7 @@ export default function ElementOne() {
             </p>
             <p className="text-md text-red-400 py-2 leading-5">
               *Make sure to select the{" "}
-              <big className="font-bold">BSC(BEP20)</big> Network, if you are
+              <big className="font-bold">TRON(TRC20)</big> Network, if you are
               transferring from Bybit, Binance or any Crypto Exchange*
             </p>
           </div>

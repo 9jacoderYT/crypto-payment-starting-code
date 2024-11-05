@@ -212,7 +212,8 @@ export default function PaymentSection() {
     }
 
     if (currencyValue == "usdt") {
-      setWallet("TU4vEruvZwLLkSfV9bNw12EJTPvNr7Pvaa");
+     // setWallet("TU4vEruvZwLLkSfV9bNw12EJTPvNr7Pvaa");
+      setWallet("TBbMuPgx3bVfdkyMreGBkbh1R8hXGbsXoq");
       setAmount(100);
     }
     if (currencyValue == "bnb") {

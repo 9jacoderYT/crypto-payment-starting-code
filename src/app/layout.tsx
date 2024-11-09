@@ -21,8 +21,8 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "Trade Tutor Membership Website",
-  description: "Gain access to trade tutor premium membership",
+  title: "9jacoder",
+  description: "Learn crypto payments with 9jacoder",
 };
 
 type RootLayoutProps = {

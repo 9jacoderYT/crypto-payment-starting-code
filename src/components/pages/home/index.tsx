@@ -1,38 +1,60 @@
 "use client";
 
 import PaymentSection from "./payment";
-import SectionOne from "./sections/section-1";
-import SectionTwo from "./sections/section-2";
-import { Faq } from "./sections/section-4";
 
 export default function HomeComponent() {
   return (
     <div>
-      <div
-        style={{
-          backgroundImage:
-            "url(https://gfxpartner.com/Crypten/assets/dark/assets/images/banner-bg.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        className="py-24"
-      >
-        <SectionOne />
+      <div className="mx-auto text-center pt-12">
+        <img
+          src="https://avatars.githubusercontent.com/u/117041814?v=4"
+          className="rounded-xl w-24 mx-auto"
+        />
+        <br />
+        <h1 className="text-2xl text-white italic">
+          9jacoder Crypto Payment System
+        </h1>
+        <div className="mx-auto max-w-xl flex flex-row justify-center my-5">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/640px-Instagram_logo_2022.svg.png"
+            className="h-8 my-auto"
+          />
+          <a
+            href="https://www.instagram.com/9jacoder.backup/"
+            className="my-auto text-teal-300 italic ml-2 font-bold text-2xl"
+          >
+            @9jacoder
+          </a>
+        </div>
+
+        <div className="mx-auto max-w-xl flex flex-row justify-center my-5">
+          <img
+            src="https://play-lh.googleusercontent.com/6am0i3walYwNLc08QOOhRJttQENNGkhlKajXSERf3JnPVRQczIyxw2w3DxeMRTOSdsY"
+            className="h-8 my-auto rounded-lg"
+          />
+          <a
+            href="https://www.youtube.com/@9jaCoder"
+            className="my-auto text-teal-300 italic ml-2 font-bold text-2xl"
+          >
+            @9jacoder
+          </a>
+        </div>
+
+        <div className="mx-auto max-w-xl flex flex-row justify-center my-5">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/X_logo.jpg/1200px-X_logo.jpg"
+            className="h-8 my-auto rounded-lg"
+          />
+          <a
+            href="https://x.com/9jacoder"
+            className="my-auto text-teal-300 italic ml-2 font-bold text-2xl"
+          >
+            @9jacoder
+          </a>
+        </div>
       </div>
 
-      <SectionTwo />
-
-      <div className="max-w-xl md:mx-auto sm:text-center lg:max-w-2xl">
-        <h2 className="max-w-lg mb-6 italic text-3xl font-bold leading-none tracking-tight text-white sm:text-4xl md:mx-auto">
-          TradeTutor Membership Subscription
-        </h2>
-        <p className="text-base text-white md:text-lg">
-          Please read through the steps provided, then begin the payment process
-        </p>
-      </div>
       <PaymentSection />
-
-      <Faq />
     </div>
   );
 }

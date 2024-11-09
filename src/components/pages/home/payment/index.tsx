@@ -1,69 +1,25 @@
 "use client";
 import * as React from "react";
-import Button from "@mui/material/Button";
-import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import {
   CopyAllOutlined,
   CurrencyExchange,
   LocalAtm,
 } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import ElementOne from "./elements/element-1";
-import { Alert, CircularProgress } from "@mui/material";
-import {
-  isValidEthOrBscTransactionHash,
-  isValidTronTransactionHash,
-} from "../../../../../lib/validations";
-import {
-  checkTransactionHash,
-  uploadNewUser,
-  uploadTransactionHash,
-} from "../../../../../lib/database/firebase-funcs";
+import { Alert } from "@mui/material";
 
 export default function PaymentSection() {
-  const searchParams = useSearchParams(); // Access search parameters
-  const [chatId, setChatId] = useState<number | null>(null);
-  const [inputValue, setInputValue] = useState<string>(""); // For handling user input
-  const [isInputLocked, setIsInputLocked] = useState<boolean>(false); // To manage input locking
-  const [currency, setCurrency] = useState<string>("usdt");
+  // Transaction states
+  const [currency, setCurrency] = useState<string>("");
   const [amount, setAmount] = useState<number>(0);
   const [wallet, setWallet] = useState<string>("");
   const [transactionHash, setTransactionHash] = useState<string>("");
+
+  // user feedback states
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>("");
   const [success, setSuccess] = useState<boolean | null>(false);
-  const [inviteLink, setInviteLink] = useState<string>("");
-  const [open, setOpen] = useState<boolean>(false);
-
-  useEffect(() => {
-    const chatIdParam = searchParams.get("chatId"); // Get chatId from the query parameters
-    if (chatIdParam) {
-      setChatId(parseInt(chatIdParam)); // Parse to number
-      setIsInputLocked(true); // Lock input immediately if chatId is available
-      setOpen(true);
-    }
-  }, [searchParams]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    // Ensure only numbers can be entered
-    if (/^\d*$/.test(value)) {
-      setInputValue(value); // Update input value
-      setChatId(value ? parseInt(value) : null); // Update chatId if valid
-      if (value) {
-        // Delay locking input for 1 second after input changes
-        setTimeout(() => {
-          if (!searchParams.get("chatId")) {
-            // Only lock if no chatId from params
-            setIsInputLocked(false);
-          }
-        }, 1000); // 1000ms = 1 second
-      }
-    }
-  };
 
   const fetchTokenAmount = async (usdAmount: number, token: string) => {
     try {
@@ -83,12 +39,7 @@ export default function PaymentSection() {
       return data.amount; // Return the fetched amount
     } catch (err) {
       // Return fallback values in case of an error
-      if (token === "bnb") {
-        return 0.176;
-      } else if (token === "eth") {
-        return 0.04;
-      }
-      return 0; // Return 0 if the token is neither BNB nor ETH
+      return 0;
     }
   };
 
@@ -96,31 +47,17 @@ export default function PaymentSection() {
     setError(null);
     setSuccess(null);
 
-    if (!chatId || !currency || !wallet || !amount || !transactionHash) {
+    if (!currency || !wallet || !amount || !transactionHash) {
       setError("All fields are required");
-      return;
-    }
-
-    // we have to validate the transaction hash
-    let validateTransactionHash = isValidTronTransactionHash(transactionHash);
-
-    if (!validateTransactionHash) {
-      setError("Transaction Hash Invalid");
       return;
     }
 
     setLoading(true);
 
     try {
-      //check if the transaction hash has been used previously
-      // Uncommet this :
-      // let res = await checkTransactionHash(transactionHash);
-      // if (res) {
-      //   setError("Transaction Hash already Used.");
-      //   return;
-      // }
+      const url = `/api/validate-${currency}`;
 
-      const response = await fetch("/api/validate-tron", {
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -140,36 +77,7 @@ export default function PaymentSection() {
         return;
       }
 
-      // Send the user the link
-      const result = await fetch("/api/sendInvite", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: chatId,
-        }),
-      });
-
-      const { errorStatus, text } = await result.json();
-
-      if (errorStatus) {
-        setError(text);
-        return;
-      }
-
-      // add the user to the database
-      const resp = await uploadNewUser(chatId, transactionHash);
-
-      //upload the transaction hash
-      const hashResponse = await uploadTransactionHash(transactionHash);
-
-      // Success case
-      alert("Invite link has been sent to your Telegram!");
-
-      //setSuccess
       setSuccess(true);
-      setInviteLink(text);
     } catch (error) {
       console.log(error);
     } finally {
@@ -182,48 +90,19 @@ export default function PaymentSection() {
   ) => {
     setError(null);
     const currencyValue = e.target.value;
-    if (currencyValue == "null") {
+    if (currencyValue == "null" || !amount) {
       setWallet("");
       setAmount(0);
       return;
     }
 
-    if (!chatId) {
-      setError("Valid Chat ID is required");
-      return;
-    }
-
-    // now before the users continues, we need to validate the chat id
-    const result = await fetch("/api/check-id", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: chatId,
-      }),
-    });
-
-    const { idStatus } = await result.json();
-
-    if (idStatus) {
-      setError("Invalid Trade Tutor ID, Follow step 1 to continue");
-      return;
-    }
-
     if (currencyValue == "usdt") {
-      setWallet("TCRntw5B9QCUdmA6FcNZWKQPs621iH83ja");
-      setAmount(10);
+      setWallet("0x0827BC11F147ABdB20aDF6b5Ff8204A7eEFA165F");
     }
     if (currencyValue == "bnb") {
       setWallet("0x0827BC11F147ABdB20aDF6b5Ff8204A7eEFA165F");
       // convert the currency
-      const currency = await fetchTokenAmount(100, "bnb");
-      setAmount(currency);
-    }
-    if (currencyValue == "eth") {
-      setWallet("ethwalletaddress");
-      const currency = await fetchTokenAmount(100, "eth");
+      const currency = await fetchTokenAmount(amount, "bnb");
       setAmount(currency);
     }
 
@@ -239,74 +118,45 @@ export default function PaymentSection() {
     }
   };
 
-  const action = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={() => setOpen(false)}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
-  const vertical = "top";
-  const horizontal = "center";
-
   return (
     <div id="payment">
-      <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={open}
-        // autoHideDuration={6000}
-        onClose={() => setOpen(false)}
-      >
-        <Alert
-          onClose={() => setOpen(false)}
-          severity="success" // Can be "error", "warning", "info", "success"
-        >
-          TradeTutor ID has been set, Scroll down to make payment.
-        </Alert>
-      </Snackbar>
       <div className="px-4 py-10 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-lg md:px-24 lg:px-8 lg:py-10">
         <div className="flex flex-col justify-between lg:flex-row gap-5 lg:gap-0">
           <ElementOne />
 
           <div className="px-5 pt-6 pb-5 text-center border border-gray-300 rounded lg:w-2/5">
             <input
-              type="text"
-              placeholder={chatId ? "" : "Input your Trade Tutor ID"}
+              type="number"
+              placeholder="Amount to Pay in USD"
               className="w-full h-12 px-4 text-teal-700 transition duration-200 bg-white border border-transparent rounded shadow-md focus:border-teal-900 focus:outline-none"
-              value={chatId !== null ? chatId.toString() : inputValue}
-              onChange={handleInputChange}
-              disabled={isInputLocked} // Disable input if locked
+              onChange={(event) => {
+                const newAmount =
+                  event.target.value === ""
+                    ? 0
+                    : parseFloat(event.target.value);
+                if (!isNaN(newAmount)) {
+                  setAmount(newAmount);
+                }
+              }}
             />
-            {chatId ? (
-              <p className="text-white italic font-medium py-3">
-                Your TradTutor ID: {chatId}
-              </p>
-            ) : (
-              <p className="py-3 italic text-white">
-                Please enter your TradeTutor ID to proceed
-              </p>
-            )}
+
+            <p className="py-3 italic text-white">
+              Enter Amount you want to pay in dollars, code will convert it to
+              your required token
+            </p>
 
             <select
               className="w-full h-12 px-4 text-teal-700 transition duration-200 bg-white border border-transparent rounded shadow-md focus:border-teal-900 focus:outline-none"
               onChange={handleCurrencyChange}
-              disabled={chatId ? false : true}
             >
               <option defaultChecked value="null">
                 - Mode Of Payment -
               </option>
-              <option value="usdt">UsDT</option>
-              {/* <option value="bnb">BNB</option> */}
-              {/* <option value="eth">Ether</option> */}
+              <option value="usdt">UsDT - BSC Network</option>
+              <option value="bnb">BNB - BSC Network</option>
             </select>
 
-            {amount && (
+            {currency && (
               <>
                 <div className="text-white text-xl my-5 w-full">
                   Send Exactly{" "}
@@ -323,11 +173,6 @@ export default function PaymentSection() {
                     >
                       <CopyAllOutlined className="w-5 h-5 text-gray-500 hover:text-teal-700 transition duration-200" />
                     </button>
-                  </p>
-                  <p className="text-sm text-red-400 py-2 leading-5">
-                    *Make sure to select the{" "}
-                    <big className="font-bold">TRON(TRC20)</big> Network, if you
-                    are transferring from Bybit, Binance or any Crypto Exchange*
                   </p>
                 </div>
 
@@ -378,24 +223,7 @@ export default function PaymentSection() {
 
             {success && (
               <>
-                <Alert severity="success">
-                  You have been sent a 1 hour invite link to the Premium group
-                  by the TradeTutor Bot.
-                </Alert>
-              </>
-            )}
-
-            {inviteLink && (
-              <>
-                <p className="text-white italic text-md">
-                  If you have not received an invite link, please use this.
-                </p>
-                <a
-                  href={inviteLink}
-                  className="text-teal-300 italic text-lg font-semibold underline"
-                >
-                  {inviteLink}
-                </a>
+                <Alert severity="success">Transaction is Valid.</Alert>
               </>
             )}
           </div>

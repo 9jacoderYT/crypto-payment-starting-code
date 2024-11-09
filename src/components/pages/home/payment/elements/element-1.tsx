@@ -19,16 +19,7 @@ export default function ElementOne() {
           </div>
           <div className="pt-1 pb-8">
             <p className="mb-2 text-lg font-bold text-white">Step 1</p>
-            <p className="text-white">
-              Generate your unique TradeTutor ID, by interacting with the
-              <a
-                href="https://t.me/tradetutor01_bot?start=start"
-                className="text-teal-400 underline italic mx-2"
-              >
-                TradeTutor Membership Bot
-              </a>
-              .
-            </p>
+            <p className="text-white">Enter how much you want to pay.</p>
           </div>
         </div>
         <div className="flex">
@@ -43,21 +34,25 @@ export default function ElementOne() {
           <div className="pt-1 pb-8">
             <p className="mb-2 text-lg font-bold text-white">Step 2</p>
             <div>
-              Navigate to the payment section on the home page, and select the
-              preferred payment cryptocurrency. Supported cryptocurrency are
-              <p className="flex flex-row">
-                UsDt{" "}
+              Select what crypto currency and network you want to use
+              <div className=" flex flex-row">
+                <span className="">UsDt </span>
+
                 <img
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7yr98Y--6f6k2wPKHVa1hRqfND0GtgCyw_g&s"
-                  className="w-6 mx-1 rounded-full animate-pulse"
+                  className="h-6 mx-1 rounded-full animate-pulse"
                 />
-                & BNB
+                <big className="italic mx-2">BSC(BEP20) Chain</big>
+              </div>
+              <div className=" flex flex-row">
+                <span className="">BnB</span>
+
                 <img
                   src="https://s2.coinmarketcap.com/static/img/coins/200x200/1839.png"
-                  className="w-6 mx-1 rounded-full animate-pulse"
+                  className="h-6 mx-1 rounded-full animate-pulse"
                 />
-                .
-              </p>
+                <big className="italic mx-2">BSC(BEP20) Chain</big>
+              </div>
             </div>
           </div>
         </div>
@@ -74,12 +69,7 @@ export default function ElementOne() {
             <p className="mb-2 text-lg font-bold">Step 3</p>
             <p>
               Transfer the exact crypto amount that is generated to the wallet
-              address provided.
-            </p>
-            <p className="text-md text-red-400 py-2 leading-5">
-              *Make sure to select the{" "}
-              <big className="font-bold">TRON(TRC20)</big> Network, if you are
-              transferring from Bybit, Binance or any Crypto Exchange*
+              address provided, on the network that was shown.
             </p>
           </div>
         </div>
@@ -114,11 +104,7 @@ export default function ElementOne() {
           </div>
           <div className="pt-1">
             <p className="mb-2 text-lg font-bold">Success</p>
-            <p>
-              The TradeTutor will inbox you with a Link to join the group. The
-              link lasts for only 24 hours, and is valid for a one time entry by
-              your Telegram account.
-            </p>
+            <p>The website will inform you if your payment was validated</p>
           </div>
         </div>
       </div>

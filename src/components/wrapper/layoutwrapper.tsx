@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState, ReactNode } from "react";
-import Navbar from "./navbar";
-import { Footer } from "./footer";
 
 interface LayoutWrapperProps {
   children: ReactNode; // Define the type for children
@@ -17,14 +15,7 @@ const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children }) => {
 
   if (!isMounted) return null; // Return null instead of undefined
 
-  
-  return (
-    <div>
-      <Navbar />
-      {children}
-      <Footer />
-    </div>
-  );
+  return <div>{children}</div>;
 };
 
 export default LayoutWrapper;
